@@ -1,5 +1,6 @@
 #directories
 books/
+build/
 
 # Prerequisites
 *.d
