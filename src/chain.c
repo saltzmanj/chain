@@ -83,6 +83,7 @@ int validateChain(Chain_t* chain) {
         }
 
         if(cumProb != 0xffff){
+            printf("Error on %s\n", curNode->nodeLabel);
             return 0;
         }
     }
