@@ -1,5 +1,7 @@
 #directories
 books/
+build/
+models/
 
 # Prerequisites
 *.d

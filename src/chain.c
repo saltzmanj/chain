@@ -83,6 +83,7 @@ int validateChain(Chain_t* chain) {
         }
 
         if(cumProb != 0xffff){
+            printf("Error on %s\n", curNode->nodeLabel);
             return 0;
         }
     }
@@ -96,4 +97,88 @@ Node_t* getNodeByLabel(Chain_t* chain, char* nodeLabel) {
         }
     }
     return NULL;
+}
+
+void exportChainToFile(char* filename, Chain_t* chain) {
+    FILE *f = fopen(filename, "w");
+    if (f == NULL) {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    fprintf(f, "%s\n", chain->chainLabel);
+    fprintf(f, "%d\n", chain->size);
+    fprintf(f, "%s\n", "NIDX,VIDX,PARENT,CHILD,PROB");
+    for(int i = 0; i<chain->size; i++) {
+        Node_t* fromNode = chain->nodes[i];
+        for(int k = 0; k<fromNode->size; k++) {
+            Vector_t* vector = fromNode->vectors[k];
+
+            fprintf(f, "%d,%d,%s,%s,%d\n",
+                i,
+                k,
+                fromNode->nodeLabel,
+                vector->toNode->nodeLabel,
+                vector->probability
+            );
+        }
+    }
+    fclose(f);
+}
+
+Chain_t* importChainFromFile(char* filename) {
+    FILE* f = fopen(filename, "r");
+    if(f == NULL) {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    char chainName[256];
+    int chainSize = 0;
+    Chain_t* chain;
+
+    char charbuf[256];
+    int lineNum = 0;
+
+    while(fgets(charbuf, 256, f)){
+        charbuf[strcspn(charbuf, "\n")] = 0;
+        if(lineNum==0) {
+            strcpy(chainName, charbuf);
+        } else if (lineNum == 1){
+            chainSize = atoi(charbuf);
+            chain = createChain(chainName, chainSize);
+        } else if (lineNum == 2) {
+            //do nothing
+        } else {
+            char* token = strtok(charbuf, ",");
+            int tokIdx = 0;
+            char fromNodeName[STR_SIZE];
+            char toNodeName[STR_SIZE];
+            uint16_t probability;
+
+            while(token != NULL) {
+                if(tokIdx==2) {
+                    strcpy(fromNodeName, token);
+                } else if (tokIdx == 3){
+                    strcpy(toNodeName, token);
+                } else if (tokIdx == 4){
+                    probability = atoi(token);
+                }
+                token = strtok(NULL, ",");
+                tokIdx += 1;
+            }
+
+            Node_t* fromNode = getNodeByLabel(chain, fromNodeName);
+            Node_t* toNode = getNodeByLabel(chain, toNodeName);
+
+            if(fromNode == NULL) {
+                fromNode = createNode(chain, fromNodeName);
+            }
+            if(toNode == NULL) {
+                toNode = createNode(chain, toNodeName);
+            }
+
+            createVector(chain, fromNode, toNode, probability);
+        }
+        lineNum+=1;
+    }
+    return chain;
 }
