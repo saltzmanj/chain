@@ -7,20 +7,24 @@ LDIR =../src
 
 LIBS=-lm
 
-default: run_chain
-
 _DEPS = chain.h ingest.h statemachine.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = chain.o ingest.o statemachine.o main.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+_OBJ_TRAIN = chain.o ingest.o statemachine.o train.o
+OBJ_TRAIN = $(patsubst %,$(ODIR)/%,$(_OBJ_TRAIN))
 
+_OBJ_RUN = chain.o statemachine.o run.o
+OBJ_RUN = $(patsubst %,$(ODIR)/%,$(_OBJ_RUN))
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-run_chain: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+train: $(OBJ_TRAIN)
+	$(CC) -o ../trainmodel $^ $(CFLAGS) $(LIBS)
+
+run: $(OBJ_RUN)
+	$(CC) -o ../runmodel $^ $(CFLAGS) $(LIBS)
+
 
 .PHONY: clean
 

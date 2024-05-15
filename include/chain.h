@@ -58,6 +58,9 @@ Vector_t* createVector(
     uint16_t probability
 );
 
+void exportChainToFile(char* filename, Chain_t* chain);
+Chain_t* importChainFromFile(char* filename);
+
 Node_t* getNodeByLabel(Chain_t* chain, char* nodeLabel);
 
 // Ensure the chain is structurally sound. Returns 1 if chain passes all checks
