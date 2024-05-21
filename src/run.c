@@ -11,6 +11,10 @@ int printNewBook(Chain_t* chain, char* firstWord, int nchars) {
         printf("Word not found :(\n");
         return 1;
     }
+    if(nchars > 10000) {
+        printf("Too many characters >:(\n");
+        return 1;
+    }
 
     StateMachine_t* stateMachine = createStateMachine(chain, currentNode);
     for(int k = 0; k < nchars; k++) {
@@ -44,5 +48,6 @@ int main(int argc, char* argv[]) {
     strcpy(firstWord, argv[3]);
 
     int exitcode = printNewBook(chain, firstWord, atoi(argv[2]));
+    printf("\n");
     return exitcode;
 }
