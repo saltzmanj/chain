@@ -219,10 +219,15 @@ Chain_t* createChainFromText(WordParent_t* wordList, int wordCount, char machine
 
         while(curChild != NULL) {
             Node_t* toNode = getNodeByLabel(chain, curChild->word);
+            if(toNode==NULL){
+                toNode = chain->nodes[0];
+            }
+            
             uint16_t prob = ((double) curChild->count / (double) curWord->probCount) * UINT16_MAX;
             Vector_t* newVector = createVector(chain, fromNode, toNode, prob);
             probSum += prob;
             curChild = curChild->nextChildWord;
+            
             if(curChild == NULL && probSum < UINT16_MAX) {
                 newVector->probability += UINT16_MAX - probSum;
                 probSum = UINT16_MAX;

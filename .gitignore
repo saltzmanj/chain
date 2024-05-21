@@ -2,6 +2,11 @@
 books/
 build/
 models/
+tests/
+
+#executables
+runmodel
+trainmodel
 
 # Prerequisites
 *.d

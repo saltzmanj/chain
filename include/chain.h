@@ -7,7 +7,7 @@
 #include "stdlib.h"
 #include "math.h"
 
-#define STR_SIZE 64
+#define STR_SIZE 256
 
 #define VECTORS_NUM 10000
 
