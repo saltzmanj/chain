@@ -1,7 +1,6 @@
 #directories
 books/
 build/
-# models/
 tests/
 
 #executables
