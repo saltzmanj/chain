@@ -1,7 +1,7 @@
 #directories
 books/
 build/
-models/
+# models/
 tests/
 
 #executables
